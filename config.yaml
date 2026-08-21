@@ -39,6 +39,11 @@ deterrent:
   type: sound                # "sound" is the only implemented type today
   sound_file: sounds/deterrent.wav
 
+notification:
+  enabled: true               # plays a short chime whenever any cat is seen, so you
+  sound_file: sounds/notification.wav  # know something's happening without watching VNC
+  cooldown_seconds: 5          # minimum time between chimes, so a lingering cat doesn't spam it
+
 storage:
   events_db: data/events.db
   events_dir: data/events

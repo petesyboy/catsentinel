@@ -52,6 +52,12 @@ def main() -> None:
 
     deterrent = build_deterrent(config.deterrent)
 
+    notifier = None
+    if config.notification.enabled:
+        from catsentinel.deterrent import SoundDeterrent
+
+        notifier = SoundDeterrent(sound_file=config.notification.sound_file)
+
     event_log = EventLog(
         db_path=config.storage.events_db,
         events_dir=config.storage.events_dir,
@@ -77,6 +83,8 @@ def main() -> None:
         cooldown_seconds=config.pipeline.cooldown_seconds,
         loop_delay_seconds=config.pipeline.loop_delay_seconds,
         debug=debug,
+        notifier=notifier,
+        notification_cooldown_seconds=config.notification.cooldown_seconds if config.notification.enabled else 5.0,
     )
     pipeline.run()
 

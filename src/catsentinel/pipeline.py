@@ -33,6 +33,8 @@ class Pipeline:
         cooldown_seconds: float = 30.0,
         loop_delay_seconds: float = 0.0,
         debug: bool = False,
+        notifier: Deterrent | None = None,
+        notification_cooldown_seconds: float = 5.0,
     ):
         self._camera = camera
         self._detector = detector
@@ -44,9 +46,12 @@ class Pipeline:
         self._cooldown_seconds = cooldown_seconds
         self._loop_delay_seconds = loop_delay_seconds
         self._debug = debug
+        self._notifier = notifier
+        self._notification_cooldown_seconds = notification_cooldown_seconds
 
         self._stranger_streak = 0
         self._last_trigger_time = 0.0
+        self._last_notification_time = 0.0
         self._last_debug_print_time = 0.0
         self._quit_requested = False
 
@@ -96,6 +101,12 @@ class Pipeline:
         crop = frame[y1:y2, x1:x2]
         if crop.size == 0:
             return
+
+        if self._notifier is not None:
+            now = time.monotonic()
+            if (now - self._last_notification_time) >= self._notification_cooldown_seconds:
+                self._notifier.trigger()
+                self._last_notification_time = now
 
         is_our_cat, probability = self._recognizer.identify(crop)
         verdict = "mine" if is_our_cat else "stranger"
