@@ -1,0 +1,19 @@
+[project]
+name = "catsentinel"
+version = "0.1.0"
+description = "Cat-flap monitor: detects cats via camera, recognizes your cat vs strangers, triggers a deterrent."
+requires-python = ">=3.9"
+dependencies = [
+    "opencv-python>=4.9.0",
+    "onnxruntime>=1.17.0",
+    "numpy>=1.24.0",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+pi = [
+    "picamera2",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

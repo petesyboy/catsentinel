@@ -1,0 +1,45 @@
+# Cat Sentinel configuration.
+# This is the only file you need to change when moving from laptop dev to the Pi.
+
+camera:
+  backend: opencv        # "opencv" (webcam/USB cam, dev + Pi) or "picamera2" (official Pi camera module)
+  device: 0               # OpenCV device index, ignored for picamera2
+  width: 640
+  height: 480
+  fps: 10
+
+motion:
+  enabled: true
+  min_area_fraction: 0.01   # fraction of frame that must change to count as motion
+  history_frames: 2
+
+detector:
+  model_path: models/yolov8n.onnx
+  confidence_threshold: 0.5
+  input_size: 640
+  cat_class_id: 15          # COCO class id for "cat"
+
+recognizer:
+  model_path: models/mobilenetv2_embed.onnx
+  embeddings_path: data/embeddings/mycat.npy               # your cat's reference photos, embedded
+  negative_embeddings_path: data/embeddings/not_mycat.npy   # other cats' photos, embedded (for training/eval only)
+  classifier_path: data/embeddings/cat_classifier.npz       # trained by scripts/train_classifier.py
+  input_size: 224
+  # Raw cosine-similarity-to-reference-set didn't cleanly separate Freddy from
+  # other cats in testing (his own leave-one-out scores 0.47-0.93 heavily
+  # overlapped other cats' 0.29-0.65). A small logistic regression classifier
+  # trained on both sets (see scripts/train_classifier.py) replaced it.
+
+pipeline:
+  confirm_frames: 3          # consecutive "stranger" verdicts required before triggering deterrent
+  cooldown_seconds: 30        # minimum time between deterrent triggers
+  loop_delay_seconds: 0.0     # extra delay between capture loop iterations
+
+deterrent:
+  type: sound                # "sound" is the only implemented type today
+  sound_file: sounds/deterrent.wav
+
+storage:
+  events_db: data/events.db
+  events_dir: data/events
+  save_snapshots: true

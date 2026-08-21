@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+models/*.onnx
+models/*.onnx.data
+data/reference_photos/mycat/*
+!data/reference_photos/mycat/.gitkeep
+data/reference_photos/not_mycat/*
+!data/reference_photos/not_mycat/.gitkeep
+data/reference_photos/mycat_raw/
+data/embeddings/*.npy
+data/embeddings/*.npz
+data/events/
+data/events.db
+*.egg-info/
