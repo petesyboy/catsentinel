@@ -4,8 +4,8 @@
 camera:
   backend: opencv        # "opencv" (webcam/USB cam, dev + Pi) or "picamera2" (official Pi camera module)
   device: 0               # OpenCV device index, ignored for picamera2
-  width: 640
-  height: 480
+  width: 1280             # 16:9 -- matches the Camera Module 3's native sensor aspect ratio,
+  height: 720              # so the full field of view is captured (4:3 would crop into it)
   fps: 10
 
 motion:
