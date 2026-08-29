@@ -6,7 +6,7 @@ camera:
   device: 0               # OpenCV device index, ignored for picamera2
   width: 1536             # 16:9, one of the Camera Module 3's native sensor modes -- matches
   height: 864              # its aspect ratio (full field of view) with little ISP scaling overhead
-  fps: 10
+  fps: 24
 
 motion:
   enabled: true
