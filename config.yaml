@@ -52,4 +52,4 @@ storage:
 streaming:
   enabled: true                # serves a live MJPEG view at http://<pi-address>:<port>/
   port: 8090                    # not authenticated -- put a Cloudflare Tunnel (+ Access) or
-  quality: 80                   # similar in front of it rather than exposing this port directly
+  quality: 50                   # similar in front of it rather than exposing this port directly
