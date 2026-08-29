@@ -19,6 +19,7 @@ from catsentinel.events import EventLog
 from catsentinel.motion import MotionGate
 from catsentinel.pipeline import Pipeline
 from catsentinel.recognizer import CatRecognizer, Embedder
+from catsentinel.stream import MJPEGStreamServer
 
 
 def main() -> None:
@@ -71,6 +72,15 @@ def main() -> None:
             history_frames=config.motion.history_frames,
         )
 
+    stream_server = None
+    if config.streaming.enabled:
+        stream_server = MJPEGStreamServer(
+            port=config.streaming.port,
+            quality=config.streaming.quality,
+        )
+        stream_server.start()
+        print(f"[catsentinel] Live view at http://<this-device-address>:{config.streaming.port}/")
+
     print("[catsentinel] Setup complete.")
     pipeline = Pipeline(
         camera=camera,
@@ -85,8 +95,12 @@ def main() -> None:
         debug=debug,
         notifier=notifier,
         notification_cooldown_seconds=config.notification.cooldown_seconds if config.notification.enabled else 5.0,
+        stream_server=stream_server,
     )
     pipeline.run()
+
+    if stream_server is not None:
+        stream_server.stop()
 
 
 if __name__ == "__main__":

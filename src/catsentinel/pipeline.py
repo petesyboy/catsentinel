@@ -35,6 +35,7 @@ class Pipeline:
         debug: bool = False,
         notifier: Deterrent | None = None,
         notification_cooldown_seconds: float = 5.0,
+        stream_server=None,
     ):
         self._camera = camera
         self._detector = detector
@@ -48,6 +49,7 @@ class Pipeline:
         self._debug = debug
         self._notifier = notifier
         self._notification_cooldown_seconds = notification_cooldown_seconds
+        self._stream_server = stream_server
 
         self._stranger_streak = 0
         self._last_trigger_time = 0.0
@@ -83,6 +85,9 @@ class Pipeline:
         if frame is None:
             self._debug_print("no frame from camera", force=True)
             return
+
+        if self._stream_server is not None:
+            self._stream_server.update_frame(frame)
 
         if self._motion_gate is not None and not self._motion_gate.detect(frame):
             self._debug_print("watching -- no motion")
